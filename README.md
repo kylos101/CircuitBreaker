@@ -14,13 +14,18 @@ How to use it
 =============
 
 Setup a field to store a breaker for a type (in this case, an EF context):
-```private Breaker daoBreaker = new Breaker(typeof(FubarContext));    ```
+```
+private Breaker daoBreaker = new Breaker(typeof(FubarContext));    
+```
 
 Setup an Action delegate to feed to the breaker:
-```Action getAllFubar = this.GetAllFubar;    ```
+```
+Action getAllFubar = this.GetAllFubar;    
+```
 
 Fire off the breaker, it'll eat exceptions, anything that bubbles up "should" be the breaker tripping (or failing...what...I'm not perfect):
-```try
+```
+try
 {
     this.daoBreaker.ExecuteAction(getAllFubar);
 }
