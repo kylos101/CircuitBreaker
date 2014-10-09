@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CircuitBreaker.CircuitBreaker" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAgEAIAAAAAAAAAAAAAAAAAAAAAAAEAAAIAAABAAAAQ=</HashCode>
+      <FileName>CircuitBreaker.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CircuitBreaker.CircuitBreakerOpenException" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CircuitBreakerOpenException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CircuitBreaker.CircuitBreakerStateStore" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAABCAABAAAAAAAAAAAAEAAAAAADiAAAAA=</HashCode>
+      <FileName>CircuitBreakerStateStore.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CircuitBreaker.CircuitBreakerStateStoreFactory" Collapsed="true">
+    <Position X="2.75" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CircuitBreakerStateStoreFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="CircuitBreaker.ICircuitBreakerStateStore" Collapsed="true">
+    <Position X="5.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAABCAAAAAAAAAAAAAAAEAAAAAADgAAAAA=</HashCode>
+      <FileName>ICircuitBreakerStateStore.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="CircuitBreaker.CircuitBreakerStateEnum" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAgGAAAA=</HashCode>
+      <FileName>CircuitBreakerStateEnum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
