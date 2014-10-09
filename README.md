@@ -10,8 +10,7 @@ http://msdn.microsoft.com/en-us/library/dn589784.aspx
 
 As you can see, it was heavily borrowed...the plan is to make changes as I go.
 
-How to use it
-=============
+#How to use it
 
 Setup a field to store a breaker for a type (in this case, an EF context):
 ```
@@ -23,7 +22,7 @@ Setup an Action delegate to feed to the breaker:
 Action getAllFubar = this.GetAllFubar;    
 ```
 
-Fire off the breaker, it'll eat exceptions, anything that bubbles up "should" be the breaker tripping (or failing...what...I'm not perfect):
+Try using the circuit, it'll eat exceptions and trip, anything that bubbles up "should" be the breaker tripping as an open exception (or it failed...what...I'm not perfect):
 ```
 try
 {
