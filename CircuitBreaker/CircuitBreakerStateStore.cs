@@ -41,15 +41,16 @@ namespace CircuitBreaker
             }
         }
 
+        private DateTime? _lastStateChangeDateUtc;
         public DateTime? LastStateChangeDateUtc
         {
             get 
             {                
-                return this.LastStateChangeDateUtc;
+                return this._lastStateChangeDateUtc;
             }
             private set
             {
-                this.LastStateChangeDateUtc = value;
+                this._lastStateChangeDateUtc = value;
             }
         }
 

@@ -40,8 +40,7 @@ namespace CircuitBreaker
             }
             catch (Exception ex)
             {
-                this.TrackException((Exception)ex);
-                throw;
+                this.TrackException(ex);                
             }
         }
 
