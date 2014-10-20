@@ -20,7 +20,7 @@ namespace CircuitBreaker
 
             if (!_stateStores.ContainsKey(key))
             {
-                _stateStores.TryAdd(key, new CircuitBreakerStateStore());
+                _stateStores.TryAdd(key, new CircuitBreakerStateStore(key));
             }
 
             return _stateStores[key];

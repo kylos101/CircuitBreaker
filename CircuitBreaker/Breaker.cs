@@ -5,11 +5,20 @@ using System.Threading;
 using System.Web;
 
 namespace CircuitBreaker
-{
-    //TODO: Make this event based, logic for event changes shouldn't be stored in nested IFs
+{        
+    /// <summary>
+    /// A generic circuit breaker. Tracks whether a type's state is usable (closed), malfunctioning (open), or recovering (half-open).
+    /// </summary>
     public class Breaker
     {        
         private readonly ICircuitBreakerStateStore stateStore; 
+        
+        
+        /// <summary>
+        /// The type you feed to this constructor will be allocated to a thread-safe, static collection, where the corresponding type's circuit state will be managed.
+        /// </summary>
+        /// <param name="sharedResource"></param>
+        /// TODO: I'm not crazy about feeding the breaker a type. It "might" be better to feed it a method, and then derive the method's class/type.
         public Breaker(Type sharedResource)
         {            
             stateStore = 
@@ -23,7 +32,7 @@ namespace CircuitBreaker
 
         public bool IsOpen { get { return !IsClosed; } }
 
-        // TODO: !!! Consider rewrite using Reactive Extensions !!!
+        // TODO: !!! Consider including Reactive Extensions !!!
         public void ExecuteAction(Action action)
         {                        
             // open circuits have existing faults, handle them
@@ -40,7 +49,8 @@ namespace CircuitBreaker
             }
             catch (Exception ex)
             {
-                this.TrackException(ex);                
+                this.HandleException(ex);
+                throw new CircuitBreakerOpenException("The circuit was just tripped. Refer to the inner exception for the cause of the trip.", ex);
             }
         }
 
@@ -60,12 +70,11 @@ namespace CircuitBreaker
                         this.stateStore.Reset();
                         return;
                     }
-                }
-                // TODO: Catch exceptions that we don't want to trip, handle them differently
+                }                
                 catch (Exception ex)
                 {
-                    this.TrackException((Exception)ex);
-                    throw;
+                    this.HandleException(ex);
+                    throw new CircuitBreakerOpenException("The circuit was tripped while half-open. Refer to the inner exception for the cause of the trip.", ex);
                 }
                 finally
                 {
@@ -75,13 +84,13 @@ namespace CircuitBreaker
                     }
                 }
             }
-            // if we get here, the circuit was still open...
-            throw new CircuitBreakerOpenException();
-        }
+            // if we get here, the circuit was still open...            
+            throw new CircuitBreakerOpenException("The circuit is still open. Refer to the inner exception for the cause of the circuit trip.",this.stateStore.LastException);
+        }     
 
-        private void TrackException(Exception ex)
+        private void HandleException(Exception ex)
         {
-            this.stateStore.Trip(ex);
+            this.stateStore.Trip(ex);            
         }
 
         /// <summary>

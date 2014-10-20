@@ -9,10 +9,14 @@ namespace CircuitBreaker
     public class CircuitBreakerStateStore : ICircuitBreakerStateStore
     {
         private ConcurrentStack<Exception> _exceptionsSinceLastStateChange;        
-        public CircuitBreakerStateStore() 
+        
+        public CircuitBreakerStateStore(string key)
         {
-            _exceptionsSinceLastStateChange = new ConcurrentStack<Exception>();            
+            this._exceptionsSinceLastStateChange = new ConcurrentStack<Exception>();            
+            this.Name = key;
         }
+
+        public string Name {get; private set;}        
 
         private CircuitBreakerStateEnum _State;
         public CircuitBreakerStateEnum State
@@ -57,21 +61,18 @@ namespace CircuitBreaker
         public void Trip(Exception ex)
         {
             this.ChangeState(CircuitBreakerStateEnum.Open);
-            _exceptionsSinceLastStateChange.Push(ex);
-            //TODO: Persist the failure, too.
+            _exceptionsSinceLastStateChange.Push(ex);            
         }
 
         public void Reset()
         {
             this.ChangeState(CircuitBreakerStateEnum.Closed);
-            _exceptionsSinceLastStateChange.Clear();
-            //TODO: Persist the reset.
+            _exceptionsSinceLastStateChange.Clear();            
         }
 
         public void HalfOpen()
         {
-            this.ChangeState(CircuitBreakerStateEnum.HalfOpen);
-            //TODO: Persist the halfOpen, I assume this is a degraded mode of performance
+            this.ChangeState(CircuitBreakerStateEnum.HalfOpen);            
         }
 
         public bool IsClosed
