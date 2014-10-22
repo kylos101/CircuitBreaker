@@ -28,9 +28,10 @@ try
 {
     this.daoBreaker.ExecuteAction(getAllFubar);
 }
-catch
+catch (CircuitBreakerOpenException ex)
 {
-    GetAllFubarBackup();
+    // log the exception or whatever
+    GetAllFubarBackup(); // Use a backup database context...hopefully its synced up!
 }
 finally
 {
