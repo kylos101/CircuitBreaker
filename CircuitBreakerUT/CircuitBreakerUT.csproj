@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="BreakerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SomeRandomClass.cs" />
     <Compile Include="SomeTest.cs" />
   </ItemGroup>
   <ItemGroup>
