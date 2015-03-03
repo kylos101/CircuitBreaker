@@ -21,7 +21,7 @@ namespace CircuitBreaker
         /// TODO: I'm not crazy about feeding the breaker a type. It "might" be better to feed it a method, and then derive the method's class/type.
         public Breaker(Type sharedResource)
         {            
-            stateStore = 
+            stateStore =
                 CircuitBreakerStateStoreFactory
                 .GetCircuitBreakerStateStore(sharedResource.ToString());
         }

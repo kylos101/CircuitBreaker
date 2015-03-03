@@ -8,7 +8,7 @@ using System.Reflection;
 namespace CircuitBreaker
 {        
     public class CircuitBreakerStateStoreFactory
-    {                
+    {
         private static ConcurrentDictionary<string, ICircuitBreakerStateStore> _stateStores =
             new ConcurrentDictionary<string,ICircuitBreakerStateStore>();       
                         
@@ -24,6 +24,6 @@ namespace CircuitBreaker
             }
 
             return _stateStores[key];
-        }
+        }        
     }
 }

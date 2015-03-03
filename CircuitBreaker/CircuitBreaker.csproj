@@ -40,10 +40,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Breaker.cs" />
+    <Compile Include="CircuitBreakerStateStoreObservable.cs" />
     <Compile Include="CircuitBreakerOpenException.cs" />
     <Compile Include="CircuitBreakerStateEnum.cs" />
     <Compile Include="CircuitBreakerStateStore.cs" />
     <Compile Include="CircuitBreakerStateStoreFactory.cs" />
+    <Compile Include="CircuitBreakerStateStoreUnknownException.cs" />
     <Compile Include="ICircuitBreakerStateStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
