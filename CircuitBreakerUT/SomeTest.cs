@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CircuitBreakerUT
 {
-    public class Test
+    public class SomeTest
     {
         public int Id { get; set; }
         public string Desc { get; set; }

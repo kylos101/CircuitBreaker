@@ -4,9 +4,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using CircuitBreaker;
-using NUnit;
 using NUnit.Framework;
 
 namespace CircuitBreakerUT
@@ -14,27 +12,27 @@ namespace CircuitBreakerUT
     [TestFixture]
     public class BreakerTest
     {
-        private List<Test> testData = new List<Test>();
+        private List<SomeTest> testData = new List<SomeTest>();
         private Breaker sbBreaker; 
         private StringBuilder sb = new StringBuilder();
         private Action aFailingAction;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             // wire-up an Action delegate, this is designed to throw exceptions...
-            this.aFailingAction = this.DoSomethingAndFail;
-
-            // wire-up a circuit breaker
-            this.sbBreaker = new Breaker(typeof(StringBuilder));        
+            this.aFailingAction = this.DoSomethingAndFail;                   
         }
 
         [SetUp]
         public void TestSetUp()
-        {           
+        {
+            // wire-up a circuit breaker
+            this.sbBreaker = new Breaker(typeof(StringBuilder)); 
+            
             // setup some test data   
-            testData.Add(new Test() { Id = 1, Desc = "Fu" });
-            testData.Add(new Test() { Id = 2, Desc = "bar" });
+            testData.Add(new SomeTest() { Id = 1, Desc = "Fu" });
+            testData.Add(new SomeTest() { Id = 2, Desc = "bar" });
             Assert.IsTrue(testData.Any(), "Looks like we're lacking test data...");                                    
         }
 
@@ -118,7 +116,7 @@ namespace CircuitBreakerUT
             throw new Exception("This is a planned exception, deal with it!");
         }   
      
-        //[Test]
+        [Test]
         public void ThreadTest()
         {
             //TODO: Write a multi-threaded test.
@@ -130,7 +128,6 @@ namespace CircuitBreakerUT
             // BackgroundWorker
             var worker = new BackgroundWorker();
             
-        }
-
+        }        
     }
 }

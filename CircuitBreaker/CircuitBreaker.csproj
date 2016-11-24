@@ -39,16 +39,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractCircuit.cs" />
+    <Compile Include="AbstractCommand.cs" />
     <Compile Include="Breaker.cs" />
     <Compile Include="CircuitBreakerOpenException.cs" />
     <Compile Include="CircuitBreakerStateEnum.cs" />
     <Compile Include="CircuitBreakerStateStore.cs" />
     <Compile Include="CircuitBreakerStateStoreFactory.cs" />
+    <Compile Include="CommandResult.cs" />
+    <Compile Include="ICircuit.cs" />
     <Compile Include="ICircuitBreakerStateStore.cs" />
+    <Compile Include="ICommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ICircuitBreakerStateStore.cs.js">
+      <DependentUpon>ICircuitBreakerStateStore.cs</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

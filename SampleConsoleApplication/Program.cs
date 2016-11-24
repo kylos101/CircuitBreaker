@@ -20,7 +20,14 @@ namespace SampleConsoleApplication
             Action someAction;
             someAction = someMethod;
 
-            breaker.ExecuteAction(someAction);          
+            try
+            {
+                breaker.ExecuteAction(someAction);          
+            }
+            catch (CircuitBreakerOpenException)
+            {
+                Console.WriteLine("Do something else here...");                   
+            }            
         }
 
         static void someMethod()

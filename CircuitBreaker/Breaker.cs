@@ -10,20 +10,28 @@ namespace CircuitBreaker
     /// A generic circuit breaker. Tracks whether a type's state is usable (closed), malfunctioning (open), or recovering (half-open).
     /// </summary>
     public class Breaker
-    {        
-        private readonly ICircuitBreakerStateStore stateStore; 
-        
-        
+    {
         /// <summary>
-        /// The type you feed to this constructor will be allocated to a thread-safe, static collection, where the corresponding type's circuit state will be managed.
+        /// A static, thread safe collection that tracks the status of circuits
         /// </summary>
-        /// <param name="sharedResource"></param>
-        /// TODO: I'm not crazy about feeding the breaker a type. It "might" be better to feed it a method, and then derive the method's class/type.
-        public Breaker(Type sharedResource)
-        {            
+        private readonly ICircuitBreakerStateStore stateStore;
+
+        /// <summary>
+        /// The circuit for this breaker
+        /// </summary>
+        private readonly ICircuit Circuit;
+                
+        /// <summary>
+        /// A breaker that will govern an ICommand, given the status of the ICircuit
+        /// </summary>
+        /// <param name="circuit"></param>        
+        public Breaker(ICircuit circuit)
+        {
+            Circuit = circuit;
+
             stateStore = 
                 CircuitBreakerStateStoreFactory
-                .GetCircuitBreakerStateStore(sharedResource.ToString());
+                .GetCircuitBreakerStateStore(Circuit);
         }
                 
         private readonly object halfOpenToken = new object();        
@@ -31,8 +39,7 @@ namespace CircuitBreaker
         public bool IsClosed { get { return stateStore.IsClosed; } }
 
         public bool IsOpen { get { return !IsClosed; } }
-
-        // TODO: !!! Consider including Reactive Extensions !!!
+        
         public void ExecuteAction(Action action)
         {                        
             // open circuits have existing faults, handle them
@@ -54,7 +61,7 @@ namespace CircuitBreaker
             }
         }
 
-        private void HandleOpenCircuit(Action action)
+        public bool OpenCircuitCanBeUsed()
         {
             // protect what is behind the circuit, do not take "action" until it is halfOpen
             if (IsHalfOpenReady)
@@ -88,7 +95,7 @@ namespace CircuitBreaker
             throw new CircuitBreakerOpenException("The circuit is still open. Refer to the inner exception for the cause of the circuit trip.",this.stateStore.LastException);
         }     
 
-        private void HandleException(Exception ex)
+        public void HandleException(Exception ex)
         {
             this.stateStore.Trip(ex);            
         }
@@ -100,10 +107,8 @@ namespace CircuitBreaker
         private bool IsHalfOpenReady
         {
             get
-            {             
-                // TODO we're going to need a way to configure this on a per-class basis
-                TimeSpan OpenToHalfOpenWaitTime = new TimeSpan(0, 0, 30);
-                return stateStore.LastStateChangeDateUtc + OpenToHalfOpenWaitTime < DateTime.UtcNow;
+            {                             
+                return stateStore.LastStateChangeDateUtc + Circuit.TryAgainAfter < DateTime.UtcNow;
             }
         }
     }
