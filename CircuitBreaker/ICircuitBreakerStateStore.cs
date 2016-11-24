@@ -15,6 +15,7 @@ namespace CircuitBreaker
         void Trip(Exception ex);
         void Reset();
         void HalfOpen();
-        bool IsClosed { get; }        
+        bool IsClosed { get; }
+        bool IsHalfOpen { get; }
     }    
 }

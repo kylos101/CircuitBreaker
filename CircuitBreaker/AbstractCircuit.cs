@@ -13,11 +13,11 @@ namespace CircuitBreaker
         public TimeSpan TryAgainAfter { get; protected set; } = new TimeSpan(0, 0, 30);
         
 
-        public AbstractCircuit(TimeSpan tryAgainAfter)
+        public AbstractCircuit(TimeSpan? tryAgainAfter)
         {
-            if (tryAgainAfter != null)
+            if (tryAgainAfter.HasValue)
             {
-                TryAgainAfter = tryAgainAfter;
+                TryAgainAfter = tryAgainAfter.Value;
             }               
         }
     }

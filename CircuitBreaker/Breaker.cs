@@ -22,7 +22,7 @@ namespace CircuitBreaker
         private readonly ICircuit Circuit;
                 
         /// <summary>
-        /// A breaker that will govern an ICommand, given the status of the ICircuit
+        /// A breaker that will govern an ICircuit
         /// </summary>
         /// <param name="circuit"></param>        
         public Breaker(ICircuit circuit)
@@ -33,37 +33,32 @@ namespace CircuitBreaker
                 CircuitBreakerStateStoreFactory
                 .GetCircuitBreakerStateStore(Circuit);
         }
-                
-        private readonly object halfOpenToken = new object();        
 
+        /// <summary>
+        /// An object to assist with inspecting locks
+        /// </summary>
+        private readonly object halfOpenToken = new object();
+
+        /// <summary>
+        /// Is the circuit closed
+        /// </summary>
         public bool IsClosed { get { return stateStore.IsClosed; } }
 
+        /// <summary>
+        /// Is the circuit open
+        /// </summary>
         public bool IsOpen { get { return !IsClosed; } }
+
+        /// <summary>
+        /// Is the circuit half open
+        /// </summary>
+        public bool IsHalfOpen { get { return stateStore.IsHalfOpen; } }
         
-        public void ExecuteAction(Action action)
-        {                        
-            // open circuits have existing faults, handle them
-            if (IsOpen)
-            {
-                HandleOpenCircuit(action);
-                return;
-            }
-
-            // The circuit breaker is Closed, execute the action.
-            try
-            {
-                action();
-            }
-            catch (Exception ex)
-            {
-                this.HandleException(ex);
-                throw new CircuitBreakerOpenException("The circuit was just tripped. Refer to the inner exception for the cause of the trip.", ex);
-            }
-        }
-
-        public bool OpenCircuitCanBeUsed()
-        {
-            // protect what is behind the circuit, do not take "action" until it is halfOpen
+        /// <summary>
+        /// Begin to try closing an open circuit
+        /// </summary>
+        public void TryHalfOpen()
+        {            
             if (IsHalfOpenReady)
             {
                 bool lockTaken = false;
@@ -72,17 +67,9 @@ namespace CircuitBreaker
                     Monitor.TryEnter(halfOpenToken, ref lockTaken);
                     if (lockTaken)
                     {
-                        this.stateStore.HalfOpen();
-                        action();
-                        this.stateStore.Reset();
-                        return;
+                        this.stateStore.HalfOpen();                        
                     }
-                }                
-                catch (Exception ex)
-                {
-                    this.HandleException(ex);
-                    throw new CircuitBreakerOpenException("The circuit was tripped while half-open. Refer to the inner exception for the cause of the trip.", ex);
-                }
+                }                                
                 finally
                 {
                     if (lockTaken)
@@ -90,12 +77,14 @@ namespace CircuitBreaker
                         Monitor.Exit(halfOpenToken);
                     }
                 }
-            }
-            // if we get here, the circuit was still open...            
-            throw new CircuitBreakerOpenException("The circuit is still open. Refer to the inner exception for the cause of the circuit trip.",this.stateStore.LastException);
+            }            
         }     
 
-        public void HandleException(Exception ex)
+        /// <summary>
+        /// Some action failed, trip the breaker
+        /// </summary>
+        /// <param name="ex"></param>
+        public void Trip(Exception ex)
         {
             this.stateStore.Trip(ex);            
         }
@@ -111,5 +100,26 @@ namespace CircuitBreaker
                 return stateStore.LastStateChangeDateUtc + Circuit.TryAgainAfter < DateTime.UtcNow;
             }
         }
+
+        /// <summary>
+        /// Close the breaker
+        /// </summary>
+        public void Close()
+        {
+            this.stateStore.Reset();            
+        }
+
+        /// <summary>
+        /// The last exception for this circuit
+        /// </summary>
+        public Exception LastException
+        {
+            get
+            {
+                return this.stateStore.LastException;
+            }
+        }
+
+        
     }
 }

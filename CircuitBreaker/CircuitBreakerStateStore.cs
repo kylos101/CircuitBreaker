@@ -75,6 +75,14 @@ namespace CircuitBreaker
             this.ChangeState(CircuitBreakerStateEnum.HalfOpen);            
         }
 
+        public bool IsHalfOpen
+        {
+            get
+            {
+                return this.State.Equals(CircuitBreakerStateEnum.HalfOpen);
+            }
+        }
+
         public bool IsClosed
         {
             get 

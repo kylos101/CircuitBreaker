@@ -15,19 +15,7 @@ namespace SampleConsoleApplication
             testData.Add(new Test { Id = 1, Desc = "Fu" });
             testData.Add(new Test { Id = 2, Desc = "bar" });
 
-            var breaker = new Breaker(typeof(StringBuilder));
-            
-            Action someAction;
-            someAction = someMethod;
-
-            try
-            {
-                breaker.ExecuteAction(someAction);          
-            }
-            catch (CircuitBreakerOpenException)
-            {
-                Console.WriteLine("Do something else here...");                   
-            }            
+             
         }
 
         static void someMethod()

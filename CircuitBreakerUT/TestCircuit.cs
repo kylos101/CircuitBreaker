@@ -5,7 +5,7 @@ namespace CircuitBreakerUT
 {
     public class TestCircuit : AbstractCircuit
     {
-        public TestCircuit(TimeSpan timespan) : base(timespan)
+        public TestCircuit(TimeSpan? timespan) : base(timespan)
         {
             base.Name = "Test...";
         }

@@ -11,123 +11,27 @@ namespace CircuitBreakerUT
 {
     [TestFixture]
     public class BreakerTest
-    {
-        private List<SomeTest> testData = new List<SomeTest>();
-        private Breaker sbBreaker; 
-        private StringBuilder sb = new StringBuilder();
-        private Action aFailingAction;
-
-        [OneTimeSetUp]
-        public void TestFixtureSetUp()
+    {               
+        [Test]            
+        public void CircuitBreakerOpenException_IsThrown_UponException()
         {
-            // wire-up an Action delegate, this is designed to throw exceptions...
-            this.aFailingAction = this.DoSomethingAndFail;                   
+            var testCircuit = new TestCircuit(null);
+            var testCommand = new TestCommand(testCircuit);
+
+            Assert.IsTrue(testCommand.Breaker.IsClosed);
+
+            Assert.That(() => testCommand.ExecuteAction,
+                Throws.Exception
+                .TypeOf<CircuitBreakerOpenException>()
+                );
         }
 
-        [SetUp]
-        public void TestSetUp()
-        {
-            // wire-up a circuit breaker
-            this.sbBreaker = new Breaker(typeof(StringBuilder)); 
-            
-            // setup some test data   
-            testData.Add(new SomeTest() { Id = 1, Desc = "Fu" });
-            testData.Add(new SomeTest() { Id = 2, Desc = "bar" });
-            Assert.IsTrue(testData.Any(), "Looks like we're lacking test data...");                                    
-        }
-
-        [TearDown]
-        public void TestTearDown()
-        {
-            // ditch the test data
-            this.testData.RemoveAll(p => p != null);                        
-            Assert.IsFalse(testData.Any());
-        }
-        
         [Test]
-        /// <summary>
-        /// Results vary.
-        /// 
-        /// For example, if you run this a second time and < 30 seconds after the first time, the breaker will still be open and skip the closed part of this test.        
-        /// </summary>         
-        public void VerifyBasicCircuitBehavior()
+        public void NewBreaker_OnIsolatedCircuit_IsClosed()
         {
-            if (this.sbBreaker.IsClosed)
-            {
-                Console.WriteLine("The breaker is closed...");                               
-
-                try
-                {
-                    this.UseTheBreaker();
-                }
-                catch (CircuitBreakerOpenException ex)
-                {
-                    Console.WriteLine(ex);
-                }
-
-                Assert.IsTrue(this.sbBreaker.IsOpen, "The circuit breaker's state should be Open.");
-            }  
-            
-            if (this.sbBreaker.IsOpen)
-            {
-                Console.WriteLine("The breaker is open...");
-                try
-                {
-                    this.UseTheBreaker();
-                }
-                catch (CircuitBreakerOpenException ex)
-                {
-                    Console.WriteLine(ex);
-                }
-            }
-
-            // wait for the breaker to allow action again...
-            var timer = new Stopwatch();
-            timer.Start();
-            while (timer.ElapsedMilliseconds < 31000) { }            
-
-            // the breaker should be ready now
-            Console.WriteLine("The breaker should be half-open...");
-            try
-            {
-                this.UseTheBreaker();
-            }
-            catch (CircuitBreakerOpenException ex)
-            {
-                Console.WriteLine(ex);
-            }            
-        }        
-
-        /// <summary>
-        /// This attempts to use the circuit breaker to perform an action.
-        /// </summary>
-        private void UseTheBreaker()
-        {
-            Console.WriteLine("Using the breaker...");
-            this.sbBreaker.ExecuteAction(aFailingAction);
+            var aCircuit = new AnotherTestCircuit(null);
+            var aCommand = new TestCommand(aCircuit);
+            Assert.IsTrue(aCommand.Breaker.IsClosed);
         }
-              
-        /// <summary>
-        /// This is a junk method designed to cause an exception. Assign this to an action delegate and use a circuit breaker's ExecuteAction method to call this...
-        /// </summary>
-        private void DoSomethingAndFail()
-        {                                 
-            //Lets pretend string builder is an outside dependency, like a EF context or web service proxy, that threw this exception...;
-            throw new Exception("This is a planned exception, deal with it!");
-        }   
-     
-        [Test]
-        public void ThreadTest()
-        {
-            //TODO: Write a multi-threaded test.
-            // Open a thread
-            // Get an exception on the first thread
-            // Open a second thread
-            // Get an exception on the second thread        
-
-            // BackgroundWorker
-            var worker = new BackgroundWorker();
-            
-        }        
     }
 }

@@ -18,49 +18,62 @@ namespace CircuitBreaker
             Breaker = new Breaker(Circuit);
         }
 
-        // things to help govern the command
-        protected Breaker Breaker;
-        protected ICircuit Circuit { get; set; }
+        /// <summary>
+        /// The breaker
+        /// </summary>
+        public readonly Breaker Breaker;
 
-        // things we might want this command to be able to do
-        public abstract Action Action { get; protected set; }
-        public abstract Action<T> ActionT { get; protected set; }
-        public abstract Task Task { get; protected set; }
-        public abstract Task<T> TaskT { get; protected set; }
-        public abstract Func<T> FuncT { get; protected set; }      
-        
-        // move some stuff from the Breaker to here
-        // TODO: ExecuteAction 
-        // TODO: HandleOpenCircuit 
-        // leave stuff on the breaker that manages the breaker...
-        // this should hit the circuit
-        
-        public void ExecuteAction()
+        /// <summary>
+        /// The circuit
+        /// </summary>
+        protected readonly ICircuit Circuit;
+
+        /// <summary>
+        /// The method we want to try executing
+        /// </summary>
+        protected abstract Action Action { get; set; }
+
+        /// <summary>
+        /// A method we want to fire.
+        /// Is executed, depending on the status of the breaker. 
+        /// </summary>
+        public CommandResult ExecuteAction
         {
-            try
+            get
             {
-                if (this.Breaker.IsClosed)
+                try
                 {
-                    this.Action();
-                }
-                else if (this.Breaker.IsOpen)
-                {
-                    if (this.Breaker.OpenCircuitCanBeUsed())
+                    if (this.Breaker.IsClosed)
                     {
                         this.Action();
-                    }                                      
+                        return CommandResult.Succeeded;
+                    }
+
+                    if (this.Breaker.IsOpen)
+                    {
+                        this.Breaker.TryHalfOpen();
+                    }
+
+                    if (this.Breaker.IsHalfOpen)
+                    {
+                        this.Action();
+                        this.Breaker.Close();
+                        return CommandResult.Succeeded;
+                    }
                 }
+                catch (Exception ex)
+                {
+                    this.Breaker.Trip(ex);
+                    throw new CircuitBreakerOpenException("The circuit has been tripped. Refer to the inner exception for the cause of the trip.", ex);
+                }
+
+                return CommandResult.Failed;
             }
-            catch (Exception ex)
-            {
-                this.Breaker.HandleException(ex);
-                throw new CircuitBreakerOpenException("The circuit is tripped. Refer to the inner exception for the cause of the trip.", ex);
-            }                                               
         } 
 
         public void ExecuteAsyncAction()
         {
-
+            throw new NotImplementedException();
         }
     }
 }
