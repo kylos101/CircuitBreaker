@@ -20,7 +20,7 @@ namespace CircuitBreakerUT
         protected override Action Action { get; set; }
 
         /// <summary>
-        /// This is a junk method designed to cause an exception.         
+        /// Fake a failure...this should "trip" the breaker's circuit
         /// </summary>
         private void DoSomethingAndFail()
         {            

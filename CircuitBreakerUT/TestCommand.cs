@@ -23,7 +23,7 @@ namespace CircuitBreakerUT
         protected override Action Action { get; set; }
 
         /// <summary>
-        /// This is a junk method designed to cause an exception.         
+        /// This should "succeed" assuming the breaker's circuit is not "tripped"
         /// </summary>
         private void DoSomething()
         {
