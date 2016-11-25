@@ -3,6 +3,9 @@ using System;
 
 namespace CircuitBreakerUT
 {
+    /// <summary>
+    /// A command with an action that always fails
+    /// </summary>
     public class TestExceptionCommand : AbstractCommand<SomeTest>
     {
         public TestExceptionCommand(ICircuit circuit) : base(circuit)

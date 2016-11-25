@@ -1,5 +1,6 @@
 ﻿using CircuitBreaker;
 using NUnit.Framework;
+using System;
 using System.Threading.Tasks;
 
 namespace CircuitBreakerUT
@@ -10,15 +11,27 @@ namespace CircuitBreakerUT
         [Test]
         public void CircuitBreakerOpenException_IsThrown_AfterExecuteActionThrows()
         {
-            var testCircuit = new OpenCircuit(null);
+            var testCircuit = new MyWebServerCircuit(null);
             var testCommand = new TestExceptionCommand(testCircuit);
 
             Assert.IsTrue(testCommand.Breaker.IsClosed);
 
-            Assert.That(() => testCommand.ExecuteAction(),
-                Throws.Exception
-                .TypeOf<CircuitBreakerOpenException>()
-                );
+            try
+            {
+                var result = testCommand.ExecuteAction().Result;
+            }
+            catch (AggregateException ex)
+            {
+                ex.Handle((x) =>
+                {
+                    Assert.IsTrue(x is CircuitBreakerOpenException);
+                    if (x is CircuitBreakerOpenException)
+                    {
+                        return true; // don't throw, we'll handle the exception
+                    }
+                    return false; // throw, we didn't encounter the expected exception
+                });
+            }
 
             Assert.IsTrue(testCommand.Breaker.IsOpen);
         }
@@ -26,7 +39,7 @@ namespace CircuitBreakerUT
         [Test]
         public void Breaker_IsClosed_OnCircuitWithoutException()
         {
-            var aCircuit = new ClosedCircuit(null);
+            var aCircuit = new MyDatabaseCircuit(null);
             var aCommand = new TestExceptionCommand(aCircuit);
             Assert.IsTrue(aCommand.Breaker.IsClosed);
         }
@@ -34,7 +47,7 @@ namespace CircuitBreakerUT
         [Test]
         public void Breaker_IsClosed_AfterSuccessfulExecuteAction()
         {
-            var aCircuit = new ClosedCircuit(null);
+            var aCircuit = new MyDatabaseCircuit(null);
             var aCommand = new TestCommand(aCircuit);
             var result = Task.Run(() => aCommand.ExecuteAction());
 

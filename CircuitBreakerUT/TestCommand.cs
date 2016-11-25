@@ -1,11 +1,12 @@
 ﻿using CircuitBreaker;
-using NUnit.Framework;
 using System;
 using System.Diagnostics;
 
 namespace CircuitBreakerUT
 {
-    [TestFixture]
+    /// <summary>
+    /// A command with an action that always works...
+    /// </summary>
     public class TestCommand : AbstractCommand<SomeTest>
     {
         public TestCommand(ICircuit circuit) : base(circuit)

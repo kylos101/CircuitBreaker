@@ -1,41 +1,83 @@
 CircuitBreaker
 ==============
+A circuit breaker class library that uses a command pattern.
 
-A circuit breaker class library
+[I started here...](http://msdn.microsoft.com/en-us/library/dn589784.aspx). As you can see, it was heavily borrowed.
 
-Hello there! This is my first attempt at implementing a circuit breaker pattern. 
+## How to use it
 
-I started here:
-http://msdn.microsoft.com/en-us/library/dn589784.aspx
+### Define a circuit
 
-As you can see, it was heavily borrowed...the plan is to make changes as I go.
+This represents something you want to protect.
 
-#How to use it
-
-Setup a field to store a breaker for a type (in this case, an EF context):
+```csharp
+    /// <summary>
+    /// My database's circuit
+    /// </summary>
+    public class MyDatabaseCircuit : AbstractCircuit
+    {
+        public MyDatabaseCircuit(TimeSpan? timespan) : base(timespan)
+        {
+            base.Description = "Some fake database I use...";
+        }
+    }
 ```
-private Breaker daoBreaker = new Breaker(typeof(FubarContext));    
+
+### Setup a command
+
+This represents something you want to do.
+
+```csharp
+    /// <summary>
+    /// A command with an action that always works...
+    /// </summary>
+    public class TestCommand : AbstractCommand<SomeTest>
+    {
+        public TestCommand(ICircuit circuit) : base(circuit)
+        {
+            this.Action = DoSomething;
+        }
+
+        /// <summary>
+        /// An action for this TestCommand
+        /// </summary>
+        protected override Action Action { get; set; }
+
+        /// <summary>
+        /// This should "succeed" assuming the breaker's circuit is not "tripped"
+        /// </summary>
+        private void DoSomething()
+        {
+            Debug.WriteLine("We did something!");
+        }
+    }
 ```
 
-Setup an Action delegate to feed to the breaker:
-```
-Action getAllFubar = this.GetAllFubar;    
-```
+### Try using your command
 
-Try using the circuit, it'll eat exceptions and trip, anything that bubbles up "should" be the breaker tripping as an open exception (or it failed...what...I'm not perfect):
-```
+It'll throw CircuitBreakerOpenException if there's trouble.
+
+Refer to the inner exception for the actual exception.
+
+```csharp
+
+var testCircuit = new MyDatabaseCircuit(null);
+var testCommand = new TestCommand(testCiruit);
+
 try
 {
-    this.daoBreaker.ExecuteAction(getAllFubar);
+    var result = testCommand.ExecuteAction().Result;
 }
-catch
+catch (AggregateException ex)
 {
-    GetAllFubarBackup();
+    ex.Handle((x) =>
+    {        
+        if (x is CircuitBreakerOpenException)
+        {
+            // do something because the circuit is open / tripped / down
+            return true; // don't throw, we're handling the exception
+        }
+        return false; // throw, we didn't encounter the expected exception
+    });
 }
-finally
-{
-    
-}
-
-return this.fubars; 
 ```
