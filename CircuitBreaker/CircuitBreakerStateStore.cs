@@ -10,10 +10,7 @@ namespace CircuitBreaker
         public CircuitBreakerStateStore(ICircuit circuit)
         {
             this._exceptionsSinceLastStateChange = new ConcurrentStack<Exception>();
-            this.Name = circuit.GetType().Name;
         }
-
-        public string Name { get; private set; }
 
         private CircuitBreakerStateEnum _State;
         public CircuitBreakerStateEnum State

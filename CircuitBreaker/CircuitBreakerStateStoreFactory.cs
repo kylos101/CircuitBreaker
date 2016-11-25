@@ -13,12 +13,12 @@ namespace CircuitBreaker
             // The ConcurrentDictionary keeps track of ICircuitBreakerStateStore objects (across threads)
             // For example, a store for a db connection, web service client, and NAS storage could exist            
 
-            if (!_stateStores.ContainsKey(circuit.Description))
+            if (!_stateStores.ContainsKey(circuit.GetType().Name))
             {
-                _stateStores.TryAdd(circuit.Description, new CircuitBreakerStateStore(circuit));
+                _stateStores.TryAdd(circuit.GetType().Name, new CircuitBreakerStateStore(circuit));
             }
 
-            return _stateStores[circuit.Description];
+            return _stateStores[circuit.GetType().Name];
         }
 
         // TODO: Add the ability for Circuit breaker stateStores to update the state in this dictionary?        
