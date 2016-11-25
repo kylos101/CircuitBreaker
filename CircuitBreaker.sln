@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircuitBreaker", "CircuitBreaker\CircuitBreaker.csproj", "{2DDC44A6-DDD7-4A11-9D96-E9E9688F2A6F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircuitBreakerUT", "CircuitBreakerUT\CircuitBreakerUT.csproj", "{F48F68D2-18F1-48DB-9631-72CCE26AA39B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleConsoleApplication", "SampleConsoleApplication\SampleConsoleApplication.csproj", "{E2A04A9D-FF48-4141-A796-6CBA87CF630C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{F48F68D2-18F1-48DB-9631-72CCE26AA39B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F48F68D2-18F1-48DB-9631-72CCE26AA39B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F48F68D2-18F1-48DB-9631-72CCE26AA39B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2A04A9D-FF48-4141-A796-6CBA87CF630C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2A04A9D-FF48-4141-A796-6CBA87CF630C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2A04A9D-FF48-4141-A796-6CBA87CF630C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2A04A9D-FF48-4141-A796-6CBA87CF630C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
