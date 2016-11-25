@@ -53,9 +53,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ICircuitBreakerStateStore.cs.js">
       <DependentUpon>ICircuitBreakerStateStore.cs</DependentUpon>
     </None>
