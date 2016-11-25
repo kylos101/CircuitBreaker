@@ -27,9 +27,9 @@ namespace CircuitBreakerUT
                     Assert.IsTrue(x is CircuitBreakerOpenException);
                     if (x is CircuitBreakerOpenException)
                     {
-                        return true; // don't throw, we'll handle the exception
+                        return true; // don't throw, we'll handle open circuit in our code
                     }
-                    return false; // throw, we didn't encounter the expected exception
+                    return false; // throw, we didn't expect this exception!
                 });
             }
 
