@@ -8,7 +8,7 @@ namespace CircuitBreaker
     public interface ICircuit
     {
         Guid Id { get; }
-        string Name { get; }
+        string Description { get; }
         TimeSpan TryAgainAfter { get; }
     }
 }

@@ -15,7 +15,7 @@ namespace CircuitBreakerUT
         [Test]            
         public void CircuitBreakerOpenException_IsThrown_UponException()
         {
-            var testCircuit = new TestCircuit(null);
+            var testCircuit = new AppServerCircuit(null);
             var testCommand = new TestCommand(testCircuit);
 
             Assert.IsTrue(testCommand.Breaker.IsClosed);
@@ -24,12 +24,14 @@ namespace CircuitBreakerUT
                 Throws.Exception
                 .TypeOf<CircuitBreakerOpenException>()
                 );
+
+            Assert.IsTrue(testCommand.Breaker.IsOpen);
         }
 
         [Test]
         public void NewBreaker_OnIsolatedCircuit_IsClosed()
         {
-            var aCircuit = new AnotherTestCircuit(null);
+            var aCircuit = new DatabaseCircuit(null);
             var aCommand = new TestCommand(aCircuit);
             Assert.IsTrue(aCommand.Breaker.IsClosed);
         }

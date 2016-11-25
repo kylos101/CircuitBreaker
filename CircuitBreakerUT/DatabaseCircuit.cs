@@ -7,11 +7,11 @@ using CircuitBreaker;
 
 namespace CircuitBreakerUT
 {
-    public class AnotherTestCircuit : AbstractCircuit
+    public class DatabaseCircuit : AbstractCircuit
     {
-        public AnotherTestCircuit(TimeSpan? timespan) : base(timespan)
+        public DatabaseCircuit(TimeSpan? timespan) : base(timespan)
         {
-            base.Name = "AnotherTest";
+            base.Description = "Some fake database I use...";
         }
     }
 }
