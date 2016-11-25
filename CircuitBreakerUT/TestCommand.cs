@@ -1,19 +1,22 @@
-﻿using System;
+﻿using CircuitBreaker;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CircuitBreaker;
 
 namespace CircuitBreakerUT
 {
+    [TestFixture]
     public class TestCommand : AbstractCommand<SomeTest>
     {
         public TestCommand(ICircuit circuit) : base(circuit)
         {
-            this.Action = DoSomethingAndFail;
+            this.Action = DoSomething;
         }
-        
+
         /// <summary>
         /// An action for this TestCommand
         /// </summary>
@@ -22,10 +25,9 @@ namespace CircuitBreakerUT
         /// <summary>
         /// This is a junk method designed to cause an exception.         
         /// </summary>
-        private void DoSomethingAndFail()
-        {            
-            throw new Exception("This is a planned exception, deal with it!");
+        private void DoSomething()
+        {
+            Debug.WriteLine("We did something!");
         }
-
     }
 }

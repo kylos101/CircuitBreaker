@@ -43,12 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DatabaseCircuit.cs" />
+    <Compile Include="ClosedCircuit.cs" />
     <Compile Include="BreakerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AppServerCircuit.cs" />
+    <Compile Include="OpenCircuit.cs" />
     <Compile Include="SomeTest.cs" />
     <Compile Include="TestCommand.cs" />
+    <Compile Include="TestExceptionCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CircuitBreaker\CircuitBreaker.csproj">

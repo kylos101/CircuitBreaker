@@ -7,9 +7,9 @@ using CircuitBreaker;
 
 namespace CircuitBreakerUT
 {
-    public class DatabaseCircuit : AbstractCircuit
+    public class ClosedCircuit : AbstractCircuit
     {
-        public DatabaseCircuit(TimeSpan? timespan) : base(timespan)
+        public ClosedCircuit(TimeSpan? timespan) : base(timespan)
         {
             base.Description = "Some fake database I use...";
         }

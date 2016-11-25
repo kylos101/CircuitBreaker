@@ -3,9 +3,9 @@ using System;
 
 namespace CircuitBreakerUT
 {
-    public class AppServerCircuit : AbstractCircuit
+    public class OpenCircuit : AbstractCircuit
     {
-        public AppServerCircuit(TimeSpan? timespan) : base(timespan)
+        public OpenCircuit(TimeSpan? timespan) : base(timespan)
         {
             base.Description = "Test...";
         }

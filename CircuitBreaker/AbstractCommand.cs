@@ -37,38 +37,36 @@ namespace CircuitBreaker
         /// A method we want to fire.
         /// Is executed, depending on the status of the breaker. 
         /// </summary>
-        public CommandResult ExecuteAction
+        public async Task<CommandResult> ExecuteAction()
         {
-            get
+            try
             {
-                try
+                if (this.Breaker.IsClosed)
                 {
-                    if (this.Breaker.IsClosed)
-                    {
-                        this.Action();
-                        return CommandResult.Succeeded;
-                    }
-
-                    if (this.Breaker.IsOpen)
-                    {
-                        this.Breaker.TryHalfOpen();
-                    }
-
-                    if (this.Breaker.IsHalfOpen)
-                    {
-                        this.Action();
-                        this.Breaker.Close();
-                        return CommandResult.Succeeded;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    this.Breaker.Trip(ex);
-                    throw new CircuitBreakerOpenException("The circuit has been tripped. Refer to the inner exception for the cause of the trip.", ex);
+                    await Task.Run(() => this.Action());
+                    return CommandResult.Succeeded;
                 }
 
-                return CommandResult.Failed;
+                if (this.Breaker.IsOpen)
+                {
+                    await Task.Run(() => this.Breaker.TryHalfOpen());
+                }
+
+                if (this.Breaker.IsHalfOpen)
+                {
+                    await Task.Run(() => this.Action());
+                    await Task.Run(() => this.Breaker.Close());
+                    return CommandResult.Succeeded;
+                }
             }
+            catch (Exception ex)
+            {
+                await Task.Run(() => this.Breaker.Trip(ex));
+                throw new CircuitBreakerOpenException("The circuit has been tripped. Refer to the inner exception for the cause of the trip.", ex);
+            }
+
+            return CommandResult.Failed;
+
         } 
 
         public void ExecuteAsyncAction()

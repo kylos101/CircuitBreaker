@@ -12,6 +12,6 @@ namespace CircuitBreaker
         /// <summary>
         /// An action in an external system, and it's result
         /// </summary>
-        CommandResult ExecuteAction { get; }            
+        Task<CommandResult> ExecuteAction();          
     }
 }
