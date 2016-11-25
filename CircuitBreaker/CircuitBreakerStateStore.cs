@@ -1,31 +1,28 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace CircuitBreaker
 {
     public class CircuitBreakerStateStore : ICircuitBreakerStateStore
     {
-        private ConcurrentStack<Exception> _exceptionsSinceLastStateChange;        
-        
+        private ConcurrentStack<Exception> _exceptionsSinceLastStateChange;
+
         public CircuitBreakerStateStore(ICircuit circuit)
         {
-            this._exceptionsSinceLastStateChange = new ConcurrentStack<Exception>();            
+            this._exceptionsSinceLastStateChange = new ConcurrentStack<Exception>();
             this.Name = circuit.GetType().Name;
         }
 
-        public string Name {get; private set;}        
+        public string Name { get; private set; }
 
         private CircuitBreakerStateEnum _State;
         public CircuitBreakerStateEnum State
-        {                        
-            get 
-            {         
+        {
+            get
+            {
                 if (this._State.Equals(CircuitBreakerStateEnum.None))
                 {
-                    this._State = CircuitBreakerStateEnum.Closed;                    
+                    this._State = CircuitBreakerStateEnum.Closed;
                 }
                 return this._State;
             }
@@ -48,8 +45,8 @@ namespace CircuitBreaker
         private DateTime? _lastStateChangeDateUtc;
         public DateTime? LastStateChangeDateUtc
         {
-            get 
-            {                
+            get
+            {
                 return this._lastStateChangeDateUtc;
             }
             private set
@@ -61,18 +58,18 @@ namespace CircuitBreaker
         public void Trip(Exception ex)
         {
             this.ChangeState(CircuitBreakerStateEnum.Open);
-            _exceptionsSinceLastStateChange.Push(ex);            
+            _exceptionsSinceLastStateChange.Push(ex);
         }
 
         public void Reset()
         {
             this.ChangeState(CircuitBreakerStateEnum.Closed);
-            _exceptionsSinceLastStateChange.Clear();            
+            _exceptionsSinceLastStateChange.Clear();
         }
 
         public void HalfOpen()
         {
-            this.ChangeState(CircuitBreakerStateEnum.HalfOpen);            
+            this.ChangeState(CircuitBreakerStateEnum.HalfOpen);
         }
 
         public bool IsHalfOpen
@@ -85,9 +82,9 @@ namespace CircuitBreaker
 
         public bool IsClosed
         {
-            get 
-            { 
-                return this.State.Equals(CircuitBreakerStateEnum.Closed);                
+            get
+            {
+                return this.State.Equals(CircuitBreakerStateEnum.Closed);
             }
         }
 

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Reflection;
+﻿using System.Collections.Concurrent;
 
 namespace CircuitBreaker
-{        
+{
     public class CircuitBreakerStateStoreFactory
-    {                
+    {
         private static ConcurrentDictionary<string, ICircuitBreakerStateStore> _stateStores =
-            new ConcurrentDictionary<string,ICircuitBreakerStateStore>();       
-                        
+            new ConcurrentDictionary<string, ICircuitBreakerStateStore>();
+
         internal static ICircuitBreakerStateStore GetCircuitBreakerStateStore(ICircuit circuit)
         {
             // There is only one type of ICircuitBreakerStateStore to return...
@@ -20,7 +15,7 @@ namespace CircuitBreaker
 
             if (!_stateStores.ContainsKey(circuit.Description))
             {
-                _stateStores.TryAdd(circuit.Description, new CircuitBreakerStateStore(circuit)); 
+                _stateStores.TryAdd(circuit.Description, new CircuitBreakerStateStore(circuit));
             }
 
             return _stateStores[circuit.Description];

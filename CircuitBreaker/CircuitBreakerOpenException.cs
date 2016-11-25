@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CircuitBreaker
 {
     public class CircuitBreakerOpenException : Exception
-    {               
-        public CircuitBreakerOpenException() {}
+    {
+        public CircuitBreakerOpenException() { }
 
-        public CircuitBreakerOpenException(string message, Exception innerException): base(message, innerException)
+        public CircuitBreakerOpenException(string message, Exception innerException) : base(message, innerException)
         {
-            
-        }        
+
+        }
     }
 }

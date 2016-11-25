@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace CircuitBreaker
 {
@@ -12,6 +11,6 @@ namespace CircuitBreaker
         /// <summary>
         /// An action in an external system, and it's result
         /// </summary>
-        Task<CommandResult> ExecuteAction();          
+        Task<CommandResult> ExecuteAction();
     }
 }

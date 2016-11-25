@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CircuitBreaker
@@ -11,7 +8,7 @@ namespace CircuitBreaker
     /// </summary>
     /// <typeparam name="T">Something we want to act on</typeparam>
     public abstract class AbstractCommand<T> : ICommand<T>
-    {                
+    {
         public AbstractCommand(ICircuit circuit)
         {
             Circuit = circuit;
@@ -67,7 +64,7 @@ namespace CircuitBreaker
 
             return CommandResult.Failed;
 
-        } 
+        }
 
         public void ExecuteAsyncAction()
         {

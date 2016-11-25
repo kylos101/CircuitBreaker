@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using System.Web;
 
 namespace CircuitBreaker
-{        
+{
     /// <summary>
     /// A generic circuit breaker. Tracks whether a type's state is usable (closed), malfunctioning (open), or recovering (half-open).
     /// </summary>
@@ -20,7 +17,7 @@ namespace CircuitBreaker
         /// The circuit for this breaker
         /// </summary>
         private readonly ICircuit Circuit;
-                
+
         /// <summary>
         /// A breaker that will govern an ICircuit
         /// </summary>
@@ -29,7 +26,7 @@ namespace CircuitBreaker
         {
             Circuit = circuit;
 
-            stateStore = 
+            stateStore =
                 CircuitBreakerStateStoreFactory
                 .GetCircuitBreakerStateStore(Circuit);
         }
@@ -53,12 +50,12 @@ namespace CircuitBreaker
         /// Is the circuit half open
         /// </summary>
         public bool IsHalfOpen { get { return stateStore.IsHalfOpen; } }
-        
+
         /// <summary>
         /// Begin to try closing an open circuit
         /// </summary>
         public void TryHalfOpen()
-        {            
+        {
             if (IsHalfOpenReady)
             {
                 bool lockTaken = false;
@@ -67,9 +64,9 @@ namespace CircuitBreaker
                     Monitor.TryEnter(halfOpenToken, ref lockTaken);
                     if (lockTaken)
                     {
-                        this.stateStore.HalfOpen();                        
+                        this.stateStore.HalfOpen();
                     }
-                }                                
+                }
                 finally
                 {
                     if (lockTaken)
@@ -77,8 +74,8 @@ namespace CircuitBreaker
                         Monitor.Exit(halfOpenToken);
                     }
                 }
-            }            
-        }     
+            }
+        }
 
         /// <summary>
         /// Some action failed, trip the breaker
@@ -86,7 +83,7 @@ namespace CircuitBreaker
         /// <param name="ex"></param>
         public void Trip(Exception ex)
         {
-            this.stateStore.Trip(ex);            
+            this.stateStore.Trip(ex);
         }
 
         /// <summary>
@@ -96,7 +93,7 @@ namespace CircuitBreaker
         private bool IsHalfOpenReady
         {
             get
-            {                             
+            {
                 return stateStore.LastStateChangeDateUtc + Circuit.TryAgainAfter < DateTime.UtcNow;
             }
         }
@@ -106,7 +103,7 @@ namespace CircuitBreaker
         /// </summary>
         public void Close()
         {
-            this.stateStore.Reset();            
+            this.stateStore.Reset();
         }
 
         /// <summary>
@@ -120,6 +117,6 @@ namespace CircuitBreaker
             }
         }
 
-        
+
     }
 }

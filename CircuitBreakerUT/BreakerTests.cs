@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using CircuitBreaker;
+﻿using CircuitBreaker;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
@@ -12,8 +6,8 @@ namespace CircuitBreakerUT
 {
     [TestFixture]
     public class BreakerTest
-    {               
-        [Test]            
+    {
+        [Test]
         public void CircuitBreakerOpenException_IsThrown_AfterExecuteActionThrows()
         {
             var testCircuit = new OpenCircuit(null);
@@ -45,7 +39,7 @@ namespace CircuitBreakerUT
             var result = Task.Run(() => aCommand.ExecuteAction());
 
             Assert.IsTrue(CommandResult.Succeeded == result.Result);
-            Assert.IsTrue(aCommand.Breaker.IsClosed);            
+            Assert.IsTrue(aCommand.Breaker.IsClosed);
         }
     }
 }

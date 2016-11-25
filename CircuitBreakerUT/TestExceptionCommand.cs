@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CircuitBreaker;
+﻿using CircuitBreaker;
+using System;
 
 namespace CircuitBreakerUT
 {
@@ -13,7 +9,7 @@ namespace CircuitBreakerUT
         {
             this.Action = DoSomethingAndFail;
         }
-        
+
         /// <summary>
         /// An action for this TestExceptionCommand
         /// </summary>
@@ -23,7 +19,7 @@ namespace CircuitBreakerUT
         /// Fake a failure...this should "trip" the breaker's circuit
         /// </summary>
         private void DoSomethingAndFail()
-        {            
+        {
             throw new Exception("This is a planned exception, deal with it!");
         }
 
