@@ -5,7 +5,7 @@ before_build:
 - cmd: nuget restore
 init:
 - ps: $env:buildVersion = "$env:packageVersion.$env:appveyor_build_number"
-- ps: $env:nugetVersion = "$env:packageVersion-beta-$env:appveyor_build_number"
+- ps: $env:nugetVersion = "$env:packageVersion.$env:appveyor_build_number"
 - ps: Update-AppveyorBuild -Version $env:buildVersion
 build:
   publish_nuget: true
