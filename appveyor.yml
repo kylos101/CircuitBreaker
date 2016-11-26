@@ -1,0 +1,19 @@
+version: 1.0.{build}
+configuration: Release
+platform: Any CPU
+before_build:
+- cmd: nuget restore
+init:
+- ps: $env:buildVersion = "$env:packageVersion.$env:appveyor_build_number"
+- ps: $env:nugetVersion = "$env:packageVersion-beta-$env:appveyor_build_number"
+- ps: Update-AppveyorBuild -Version $env:buildVersion
+build:
+  publish_nuget: true
+  verbosity: minimal
+after_build:
+- ps: nuget pack CircuitBreaker.nuspec -version "$env:nugetVersion"
+deploy:
+- provider: NuGet
+  api_key:
+    secure: dte51McU5EVdkCp5ROraF7xiJA9X70/iDyyYjj2ojliL2hDETnk088GFO2XVpBdz
+  artifact: /.*\.nupkg/
