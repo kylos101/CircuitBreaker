@@ -1,5 +1,7 @@
 CircuitBreaker
 ==============
+[![Build status](https://ci.appveyor.com/api/projects/status/24xnocra9wc8hl00/branch/master?svg=true)](https://ci.appveyor.com/project/kylos101/circuitbreaker/branch/master)
+
 A circuit breaker class library that uses a command pattern.
 
 [I started here...](http://msdn.microsoft.com/en-us/library/dn589784.aspx). As you can see, it was heavily borrowed.
