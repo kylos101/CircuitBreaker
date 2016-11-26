@@ -53,6 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CircuitBreaker.nuspec" />
     <None Include="ICircuitBreakerStateStore.cs.js">
       <DependentUpon>ICircuitBreakerStateStore.cs</DependentUpon>
     </None>
